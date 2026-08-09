@@ -1,64 +1,102 @@
 # Attacker Chain – ICS/Modbus (Claus for Concern)
 
-This attacker chain outlines how an adversary can abuse insecure-by-design Modbus communication to interact with a PLC, read/write registers, and influence industrial processes.
+This attacker chain explains how an adversary can abuse insecure‑by‑design Modbus communication to interact with a PLC, enumerate registers, and manipulate process behaviour. It also maps each attack phase to the Python scripts used during analysis.
+
+---
 
 ## 1. Reconnaissance
 
-The attacker identifies an exposed ICS/OT network segment where a PLC is reachable over TCP port **502** (Modbus).  
-Because Modbus lacks authentication, any host with network access can communicate with the device.
+The attacker identifies a PLC exposed on TCP port **502** (Modbus).  
+Because Modbus has **no authentication**, any host with network access can communicate with the device. 
+
+**Related script:**  
+- `discovery.py` — Scans coils, holding registers, and device information.
 
 Key actions:
-- Network scanning to discover Modbus-enabled devices  
-- Identifying PLC model, function support, and register layout  
-- Mapping holding registers to understand memory structure  
+- Identify Modbus‑enabled devices  
+- Determine PLC model and supported function codes  
+- Map holding registers to understand memory layout 
+
+---
 
 ## 2. Modbus Interaction
 
-Once the PLC is discovered, the attacker begins interacting with it using standard Modbus function codes.
+After discovering the PLC, the attacker interacts with it using standard Modbus function codes. 
 
-Typical actions:
-- **FC03 – Read Holding Registers** to enumerate memory  
-- **FC01/FC02 – Read Coils/Inputs** to understand process state  
-- **FC06 – Write Single Register** to modify values  
-- **FC16 – Write Multiple Registers** for bulk manipulation  
+Typical operations:
+- **FC03 – Read Holding Registers** (enumerate memory)  
+- **FC01/FC02 – Read Coils/Inputs** (process state)  
+- **FC06 – Write Single Register** (modify values)  
+- **FC16 – Write Multiple Registers** (bulk manipulation) 
 
-This phase reveals operational data and exposes writable registers that control process logic.
+**Related script:**  
+- `set_registry.py` — Writes values to specific PLC registers.
 
-## 3. Register Abuse
+This phase reveals operational data and exposes writable registers that influence process logic.
 
-The attacker identifies critical registers that influence PLC behaviour.  
-By writing malicious values, the attacker can alter process flow or disrupt operations.
+---
 
-Examples:
+## 3. Register Manipulation (Attack Phase)
+
+The attacker identifies critical registers that control process behaviour.  
+By writing malicious values, the attacker can disrupt operations or force unsafe states. 
+
+Your attack scripts represent different impact scenarios:
+
+### **Shutdown Attacks**
+- `attack_shutdown.py`  
+- `attack_shutdown2.py`  
+
+These scripts write values that trigger shutdown conditions or force the PLC into a fault/safe state.
+
+### **Stop Fill Attacks**
+- `attack_stop_fill.py`  
+- `attack_stop_fill2.py`  
+
+These scripts manipulate registers controlling tank fill operations, halting flow or preventing filling.
+
+### **Movement / Flow Manipulation**
+- `attack_move_fill.py`  
+- `attack_move_fill2.py`  
+
+These scripts alter actuator/sensor states to redirect flow or disrupt normal movement.
+
+Examples of register abuse:  
 - Overwriting configuration values  
 - Manipulating sensor/actuator states  
-- Injecting unexpected data into control logic  
+- Injecting unexpected data into control logic 
 
-Because Modbus has no integrity or authentication, the PLC accepts these writes as legitimate.
+Because Modbus lacks integrity and authentication, the PLC accepts these writes as legitimate commands.
+
+---
 
 ## 4. Impact on Industrial Process
 
-Unauthorized register manipulation can lead to:
-
+Unauthorized register manipulation can lead to:  
 - Incorrect process states  
 - Fault conditions  
-- Shutdowns or unsafe behaviour  
-- Loss of visibility for operators  
+- Forced shutdowns  
+- Loss of operator visibility  
+- Unsafe or unexpected behaviour 
 
 The attacker effectively gains control over parts of the industrial process without needing credentials or bypassing complex security controls.
 
+---
+
 ## 5. SOC Detection Opportunities
 
-SOC teams can detect malicious Modbus activity by monitoring:
-
+SOC teams can detect malicious Modbus activity by monitoring:  
 - Unexpected Modbus write operations  
-- High-frequency register access  
-- Access from non-ICS hosts  
+- High‑frequency register access  
+- Access from non‑ICS hosts  
 - Abnormal function code usage  
-- Deviations from normal register patterns  
+- Deviations from normal register patterns 
 
 Detection rules (Suricata/Sigma) can flag suspicious Modbus traffic and help analysts respond quickly.
 
 ---
 
-This attacker chain demonstrates how insecure ICS protocols like Modbus can be abused and highlights the importance of monitoring OT networks for unauthorized activity.
+## Summary
+
+This attacker chain demonstrates how insecure ICS protocols like Modbus can be abused using simple Python scripts.  
+Referencing the scripts clarifies the attack flow, while the process explanation provides SOC‑ready analytical value. 
