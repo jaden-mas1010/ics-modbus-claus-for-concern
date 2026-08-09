@@ -1,0 +1,13 @@
+# Suricata Rule – Detect Unauthorized Modbus Write Operations
+# Purpose: Alert when a host issues Modbus FC06 or FC16 write commands to a PLC.
+
+alert tcp any any -> any 502 (
+    msg:"ICS/Modbus – Unauthorized Write Operation (FC06/FC16)";
+    flow:to_server;
+    content:"|00 06|"; offset:7; depth:2; nocase;
+    content:"|00 10|"; offset:7; depth:2; nocase;
+    classtype:attempted-admin;
+    sid:400001;
+    rev:1;
+    metadata:service modbus, attack.modbus_write, deployment.production;
+)
