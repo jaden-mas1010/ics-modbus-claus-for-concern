@@ -1,0 +1,31 @@
+###############################################
+# Splunk Correlation Rule – Unauthorized Modbus Writes
+# Purpose: Detect repeated Modbus FC06/FC16 write operations to PLCs
+# Severity: High
+###############################################
+
+| tstats `summariesonly` count 
+    FROM datamodel=Network_Traffic.All_Traffic 
+    WHERE All_Traffic.dest_port=502 
+    BY All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.modbus.func_code All_Traffic.modbus.register All_Traffic.modbus.value _time
+
+| search All_Traffic.modbus.func_code IN (6,16)
+
+| bin _time span=1m
+
+| stats count values(All_Traffic.modbus.register) AS registers 
+        values(All_Traffic.modbus.value) AS values 
+        by src_ip dest_ip All_Traffic.modbus.func_code _time
+
+| eval attack_type=case(
+        All_Traffic.modbus.func_code=6, "Write Single Register (FC06)",
+        All_Traffic.modbus.func_code=16, "Write Multiple Registers (FC16)"
+    )
+
+| where count >= 3
+
+| eval severity="high"
+| eval description="Multiple Modbus write operations detected targeting PLC registers. Possible unauthorized manipulation."
+
+| table _time src_ip dest_ip attack_type registers values count severity description
+| sort - _time
