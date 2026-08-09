@@ -24,15 +24,6 @@ This case study demonstrates practical OT/ICS security knowledge and analytical 
 
 ## Repository Structure
 
-ics-modbus-claus-for-concern/
-│
-├── attacker_chain.md
-├── soc_alert.md
-├── detection_rules/
-│   ├── suricata.yaml
-│   └── sigma.yaml
-├── scripts/
-│   └── modbus_read.py
-└── notes/
-    └── protocol_breakdown.md
 
+
+<img width="556" height="411" alt="image" src="https://github.com/user-attachments/assets/2a52cff9-0f5b-477f-bd3f-a67dee619584" />
