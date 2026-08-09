@@ -1,0 +1,26 @@
+title: ICS/Modbus Unauthorized Write Operation
+id: 400002
+status: stable
+description: Detects Modbus TCP write operations (FC06/FC16) that may indicate unauthorized manipulation of PLC registers.
+author: Jaden Julius Mascarenhas
+date: 2026/08/09
+references:
+  - https://en.wikipedia.org/wiki/Modbus
+logsource:
+  product: network
+  service: modbus
+detection:
+  selection_fc06:
+    modbus.func_code: 6   # Write Single Register
+  selection_fc16:
+    modbus.func_code: 16  # Write Multiple Registers
+  condition: selection_fc06 or selection_fc16
+fields:
+  - src_ip
+  - dest_ip
+  - modbus.func_code
+  - modbus.register
+  - modbus.value
+falsepositives:
+  - Legitimate engineering workstation activity
+level: high
