@@ -18,4 +18,20 @@ This repository includes my own work, such as:
 
 ## Why This Matters
 
-ICS/OT environments are increasingly targeted by threat
+ICS/OT environments are increasingly targeted by threat actors. Understanding how insecure protocols behave, how PLCs respond to unauthorized commands, and how to detect malicious activity is essential for modern SOC analysts—especially those working with critical infrastructure.
+
+This case study demonstrates practical OT/ICS security knowledge and analytical skills applicable to real‑world monitoring and incident response.
+
+## Repository Structure
+
+ics-modbus-claus-for-concern/
+│
+├── attacker_chain.md
+├── soc_alert.md
+├── detection_rules/
+│   ├── suricata.yaml
+│   └── sigma.yaml
+├── scripts/
+│   └── modbus_read.py
+└── notes/
+└── protocol_breakdown.md
