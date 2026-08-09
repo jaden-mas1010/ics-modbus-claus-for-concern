@@ -15,7 +15,7 @@ They must be run **only in a controlled lab environment**.
 pip install pymodbus
 PLC or Modbus Simulator
 You can use:
-```bash
+```
 A real PLC (lab only)
 
 A Modbus simulator (e.g., ModbusPal, QModMaster)
@@ -24,19 +24,22 @@ TryHackMe ICS/Modbus environment
 
 2. Configure Target Settings
 Each script contains:
-
+```bash
 python
 PLC_IP = "192.168.x.x"
 PLC_PORT = 502
 Update PLC_IP to match your lab PLC or simulator.
-
+```
 3. Running Reconnaissance
 discovery.py
 Enumerates coils, holding registers, and input registers.
 
-bash
+```
 python3 discovery.py
+
+```
 Expected output:
+
 
 Register values
 
@@ -45,11 +48,14 @@ Coil states
 Basic device info
 
 4. Writing to Registers
+```
 set_registry.py
+```
 Writes a single value to a chosen holding register.
 
-bash
+```
 python3 set_registry.py
+```
 Use this to test:
 
 Register accessibility
@@ -60,9 +66,10 @@ Safe write operations
 
 5. Running Attack Scripts
 Shutdown Attack
-bash
+```
 python3 attack_shutdown.py
 python3 attack_shutdown2.py
+```
 Effect:
 
 Forces PLC into shutdown/fault mode
@@ -70,9 +77,10 @@ Forces PLC into shutdown/fault mode
 Overwrites critical register (0005)
 
 Stop Fill Attacks
-bash
+```
 python3 attack_stop_fill.py
 python3 attack_stop_fill2.py
+```
 Effect:
 
 Stops tank filling
@@ -81,8 +89,10 @@ Manipulates pump/valve control registers
 
 Movement / Flow Manipulation
 bash
+```
 python3 attack_move_fill.py
 python3 attack_move_fill2.py
+```
 Effect:
 
 Reverses flow direction
