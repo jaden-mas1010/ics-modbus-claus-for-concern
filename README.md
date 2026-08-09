@@ -22,8 +22,7 @@ ICS/OT environments are increasingly targeted by threat actors. Understanding ho
 
 This case study demonstrates practical OT/ICS security knowledge and analytical skills applicable to real‑world monitoring and incident response.
 
-## Repository Structure
 
 
 
-<img width="556" height="411" alt="image" src="https://github.com/user-attachments/assets/2a52cff9-0f5b-477f-bd3f-a67dee619584" />
+
