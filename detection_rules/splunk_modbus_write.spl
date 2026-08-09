@@ -1,0 +1,11 @@
+| tstats `summariesonly` count 
+    FROM datamodel=Network_Traffic.All_Traffic 
+    WHERE All_Traffic.dest_port=502 
+    BY All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.modbus.func_code All_Traffic.modbus.register All_Traffic.modbus.value
+| search All_Traffic.modbus.func_code IN (6,16)
+| eval attack_type=case(
+        All_Traffic.modbus.func_code=6, "Write Single Register (FC06)",
+        All_Traffic.modbus.func_code=16, "Write Multiple Registers (FC16)"
+    )
+| table src_ip dest_ip attack_type All_Traffic.modbus.register All_Traffic.modbus.value count
+| sort - count
